@@ -1,0 +1,128 @@
+[
+  {
+    "name": "Uruguai — São Borja",
+    "river": "Uruguai",
+    "city": "São Borja",
+    "lat": -28.66,
+    "lon": -56.0,
+    "code": "ref-uruguai-soborja",
+    "source": "Nível Uruguai / Nível Guaíba (agregadores ANA/SGB)",
+    "url": "https://niveluruguai.com.br/saoborja"
+  },
+  {
+    "name": "Uruguai — Itaqui",
+    "river": "Uruguai",
+    "city": "Itaqui",
+    "lat": -29.13,
+    "lon": -56.55,
+    "code": "ref-uruguai-itaqui",
+    "source": "Nível Uruguai / Nível Guaíba (agregadores ANA/SGB)",
+    "url": "https://niveluruguai.com.br/itaqui"
+  },
+  {
+    "name": "Uruguai — Uruguaiana",
+    "river": "Uruguai",
+    "city": "Uruguaiana",
+    "lat": -29.76,
+    "lon": -57.09,
+    "code": "ref-uruguai-uruguaiana",
+    "source": "Nível Uruguai / Nível Guaíba (agregadores ANA/SGB)",
+    "url": "https://niveluruguai.com.br/"
+  },
+  {
+    "name": "Ibicuí — Manuel Viana",
+    "river": "Ibicuí",
+    "city": "Manuel Viana",
+    "lat": -29.59,
+    "lon": -55.48,
+    "code": "ref-ibicu-manuelviana",
+    "source": "Agora RS (monitoramento público; verificar estação e dados)",
+    "url": null
+  },
+  {
+    "name": "Ibirapuitã — Alegrete",
+    "river": "Ibirapuitã",
+    "city": "Alegrete",
+    "lat": -29.79,
+    "lon": -55.79,
+    "code": "ref-ibirapuit-alegrete",
+    "source": "Nível Uruguai / Nível Guaíba (agregadores ANA/SGB)",
+    "url": "https://niveluruguai.com.br/alegrete"
+  },
+  {
+    "name": "Quaraí — Quaraí",
+    "river": "Quaraí",
+    "city": "Quaraí",
+    "lat": -30.38,
+    "lon": -56.45,
+    "code": "ref-quara-quara",
+    "source": "Nível Uruguai / Nível Guaíba (agregadores ANA/SGB)",
+    "url": "https://niveluruguai.com.br/quarai"
+  },
+  {
+    "name": "Santa Maria — Rosário do Sul",
+    "river": "Santa Maria",
+    "city": "Rosário do Sul",
+    "lat": -30.25,
+    "lon": -54.91,
+    "code": "ref-santamaria-rosriodosul",
+    "source": "Agora RS (monitoramento público; verificar estação e dados)",
+    "url": null
+  },
+  {
+    "name": "Jacuí — Cachoeira do Sul",
+    "river": "Jacuí",
+    "city": "Cachoeira do Sul",
+    "lat": -30.04,
+    "lon": -52.89,
+    "code": "ref-jacu-cachoeiradosul",
+    "source": "Nível Uruguai / Nível Guaíba (agregadores ANA/SGB)",
+    "url": "https://nivelguaiba.com.br/cachoeiradosul"
+  },
+  {
+    "name": "Forqueta — Arroio do Meio",
+    "river": "Forqueta",
+    "city": "Arroio do Meio",
+    "lat": -29.4,
+    "lon": -51.95,
+    "code": "ref-forqueta-arroiodomeio",
+    "source": "Defesa Civil RS — DCRS-00104",
+    "url": null,
+    "official_code": "DCRS-00104",
+    "official_label": "DCRS104 Arroio do Meio/Lajeado (H)",
+    "official_url": "https://redehidrometeorologica.defesacivil.rs.gov.br/Estacao/DCRS-00104"
+  },
+  {
+    "name": "Taquari — Lajeado",
+    "river": "Taquari",
+    "city": "Lajeado",
+    "lat": -29.47,
+    "lon": -51.96,
+    "code": "ref-taquari-lajeado",
+    "source": "Nível Uruguai / Nível Guaíba (agregadores ANA/SGB)",
+    "url": "https://nivelguaiba.com.br/lajeado"
+  },
+  {
+    "name": "Jacuí — Rio Pardo",
+    "river": "Jacuí",
+    "city": "Rio Pardo",
+    "lat": -29.99,
+    "lon": -52.38,
+    "code": "ref-jacu-riopardo",
+    "source": "Nível Uruguai / Nível Guaíba (agregadores ANA/SGB)",
+    "url": "https://nivelguaiba.com.br/riopardo"
+  },
+  {
+    "name": "Arroio Cadena — Santa Maria",
+    "river": "Arroio Cadena",
+    "city": "Santa Maria",
+    "lat": -29.69,
+    "lon": -53.81,
+    "code": "ref-vacaca-santamaria",
+    "source": "Defesa Civil RS — DCRS-00027",
+    "url": null,
+    "official_code": "DCRS-00027",
+    "official_label": "DCRS027 Santa Maria - Arroio Cadena",
+    "official_url": "https://redehidrometeorologica.defesacivil.rs.gov.br/Estacao/DCRS-00027"
+  }
+]

@@ -1,0 +1,2 @@
+truststore>=0.10,<1
+tzdata>=2025.2

@@ -1,0 +1,71 @@
+:root{font-family:system-ui,Segoe UI,Arial,sans-serif;color:#eaf2ff;background:#0a1322}*{box-sizing:border-box}body{margin:0;padding:20px;max-width:1800px;margin:auto}header{display:flex;justify-content:space-between;gap:20px;align-items:center}h1{font-size:28px;margin:0}h1 span{font-size:16px;color:#9fb6d1;font-weight:400}header p,small,#updated{color:#a7bed8}header p{margin:8px 0 18px}.notice{background:#26364d;border-left:4px solid #eebc51;border-radius:9px;padding:12px 16px;margin-bottom:16px}.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:18px}.metrics article,.panel{background:#14243b;border:1px solid #29425f;border-radius:14px}.metrics article{padding:18px}.metrics strong{display:block;font-size:32px;margin-top:12px}.metrics small{font-size:13px}main{display:grid;grid-template-columns:2fr 1fr;gap:18px}.panel{overflow:hidden}.panelHead{padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}.panelHead h2{font-size:19px;margin:0}.panelHead span{color:#a7bed8;font-size:13px}#map{height:530px;background:#25354a}.filters{padding:0 16px 14px;display:grid;gap:10px}input,select{background:#1e314b;color:white;border:1px solid #38516c;border-radius:9px;padding:12px;width:100%;font-size:14px}#stations{height:416px;overflow:auto;padding:0 12px 12px}.station{display:block;width:100%;text-align:left;background:#1b2d46;border:1px solid #38516c;color:white;border-radius:9px;padding:12px;margin:8px 0;cursor:pointer}.station:hover{background:#284260}.station strong{display:block;margin-bottom:5px}.station small{display:block;margin:4px 0}.pill{display:inline-block;padding:3px 8px;border-radius:30px;background:#40536b;font-size:12px}.normal{background:#15583e}.inundacao{background:#a82d50}.proximo{background:#805c1c}.desatualizado,.indisponivel{background:#5e6270}.detail{margin-top:18px;padding-bottom:12px}#detailInfo{padding:0 18px 10px;line-height:1.8;color:#c8d7e8}.chartBox{height:310px;padding:12px 20px 20px}footer{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0;color:#9fb6d1}a{color:#9bcaff}@media(max-width:950px){main{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}#map{height:430px}#stations{height:320px}header{display:block}} 
+
+#riverGroups{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin:12px 0}.river-group{border:1px solid #4c6a8a;border-radius:8px;padding:10px;background:#172a42}.river-group h3{font-size:13px;margin:0 0 8px;color:#d8e9ff}.river-city{display:block;width:100%;text-align:left;margin:5px 0;padding:8px;border:1px solid #42607e;border-radius:6px;background:#233b56;color:white;cursor:pointer}.river-city:hover{background:#355879}
+
+/* V5: quadros compactos inspirados no modelo de referência */
+main{grid-template-columns:minmax(0,1.25fr) minmax(410px,1fr)}
+#riverGroups{grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;padding:0 14px 16px;margin:0;max-height:660px;overflow:auto}
+.river-group{background:#f7fbff;color:#13273c;border:2px solid #8eaac4;border-radius:8px;padding:10px 12px;box-shadow:0 3px 12px #0002}
+.river-group h3{text-align:center;color:#13273c;font-size:15px;margin:0 0 2px;font-weight:800}
+.river-subtitle{font-size:11px;text-align:center;color:#405a70;margin:0 0 8px}
+.river-city{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px;margin:3px 0;padding:4px 3px;background:transparent;border:0;color:#13273c;text-align:left;font-size:12px;cursor:pointer;border-radius:4px}
+.river-city:hover,.river-city:focus{background:#dfeefb;outline:1px solid #93b5d5}
+.river-city .numbers{font-variant-numeric:tabular-nums;white-space:normal}.river-city .signals{display:flex;gap:5px;align-items:center;white-space:nowrap;font-size:17px;font-weight:900}
+.signal-dot{width:13px;height:13px;border-radius:50%;display:inline-block;background:#a3adb7;border:1px solid #6e7c88}
+.signal-dot.normal{background:#18c477;border-color:#0b9c58}.signal-dot.inundacao{background:#f04451;border-color:#c5212f}.signal-dot.proximo{background:#ffaf2f;border-color:#db8700}
+.signal-arrow.up{color:#e4313c}.signal-arrow.down{color:#0cb46d}.signal-arrow.flat{color:#687b8c}
+.river-footnote{margin:7px 0 0;font-size:10px;color:#526879;text-align:center}
+.legend-inline{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:11px;color:#d7e6f7;padding:0 17px 15px}.station-details{padding:0 14px 16px}.station-details summary{cursor:pointer;color:#b7d6f3;padding:9px}.station-details #stations{height:260px}
+@media(max-width:1100px){main{grid-template-columns:1fr}#riverGroups{max-height:none}}
+@media(max-width:600px){#riverGroups{grid-template-columns:1fr}body{padding:9px}.river-city{font-size:13px}}
+
+/* V6 — layout hidrográfico com mapa central e quadros laterais */
+body{max-width:1920px;padding:14px 18px}
+main.hydro-layout{display:grid;grid-template-columns:minmax(235px,1fr) minmax(400px,3.2fr) minmax(235px,1fr);align-items:stretch;gap:12px}
+.river-column{min-width:0;display:flex;flex-direction:column;gap:8px}
+.river-column>h2{margin:0;padding:10px 6px;font-size:12px;text-align:center;color:#d4e6fb;letter-spacing:.06em}
+.river-groups{display:flex;flex-direction:column;gap:10px;justify-content:space-between;flex:1}
+.river-group{padding:10px 9px;min-height:94px;border-radius:5px}
+.river-group h3{font-size:14px}
+.river-city{font-size:12px;grid-template-columns:minmax(0,1fr) 38px}
+.river-city .signals{justify-content:flex-end}
+.river-city .numbers{line-height:1.4}
+.mapPanel{display:flex;flex-direction:column;min-width:0}
+.mapPanel .panelHead{padding:12px;flex-wrap:wrap}
+.mapPanel .panelHead h2{font-size:17px}
+#map{flex:1;min-height:570px;height:680px}
+.map-caption{padding:10px 12px;color:#b7cde2;font-size:11px}
+.browse{margin-top:15px}
+.browse .filters{grid-template-columns:2fr 1fr;max-width:800px}
+.browse #stations{height:auto;max-height:450px}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+.legend-dot.green{background:#18c477}.legend-dot.orange{background:#ffaf2f}.legend-dot.red{background:#f04451}
+@media(max-width:1120px){main.hydro-layout{grid-template-columns:minmax(190px,1fr) minmax(310px,2fr) minmax(190px,1fr);gap:7px}body{padding:8px}.river-city{font-size:11px}#map{min-height:550px}}
+@media(max-width:760px){main.hydro-layout{grid-template-columns:1fr 1fr}.hydro-layout .mapPanel{grid-column:1/-1;grid-row:1}#map{height:390px;min-height:390px}.river-column{grid-row:2}.river-group{min-height:85px}.browse .filters{grid-template-columns:1fr}}
+@media(max-width:450px){main.hydro-layout{grid-template-columns:1fr}.hydro-layout .mapPanel{grid-column:1;grid-row:1}.river-column{grid-row:auto}.river-column>h2{font-size:13px}}
+
+/* V7 — indicadores de tendência em tamanho reforçado */
+.river-city{grid-template-columns:minmax(0,1fr) 62px;min-height:34px}
+.river-city .signals{gap:8px;justify-content:flex-end}
+.signal-dot{width:16px;height:16px;flex:0 0 16px;border-width:2px}
+.signal-arrow{display:inline-flex;align-items:center;justify-content:center;min-width:30px;font-family:Arial,sans-serif;font-size:32px;line-height:1;font-weight:1000;-webkit-text-stroke:2px currentColor}
+.signal-arrow.flat{-webkit-text-stroke:0;font-size:22px}
+
+/* Correção: nenhuma seta horizontal/cinza nos quadros */
+.signal-arrow.down{color:#00ad56;font-size:38px;font-weight:1000;-webkit-text-stroke:2.5px currentColor}
+.signal-arrow.up{color:#e4313c;font-size:38px;font-weight:1000;-webkit-text-stroke:2.5px currentColor}
+
+/* V8: cores de risco somente quando há leitura e cota válidas. */
+.signal-dot.no-reading{display:none!important}
+.signal-arrow.unavailable{color:#536b80;font-size:23px;-webkit-text-stroke:0}
+.river-group h3{background:#08356b;color:white;border-radius:4px;padding:5px 3px;margin:-7px -6px 7px;font-size:15px}
+.river-group{background:#f9fcff;border:2px solid #285280}
+.river-subtitle{color:#29527e}
+.river-city{background:transparent;color:#0a243e;border:0;border-radius:0;padding:5px 0}
+.river-city:hover{background:#e8f4ff}
+.signal-dot.proximo{background:#eab308;border-color:#bd8b04}
+.signal-dot.normal{background:#16a34a;border-color:#0b7c34}
+.signal-dot.inundacao{background:#dc2626;border-color:#a71919}
+
+/* Estações sem medição: texto, nunca círculo branco/cinza. */
+.missing-reading-label{background:transparent!important;border:0!important;box-shadow:none!important;text-align:center}.missing-reading-label span{display:inline-block;padding:3px 5px;background:#10243b;color:#fff;border:1px solid #7194b6;border-radius:4px;font-size:10px;white-space:nowrap}
