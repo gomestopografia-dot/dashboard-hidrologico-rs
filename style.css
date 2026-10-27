@@ -69,3 +69,5 @@ main.hydro-layout{display:grid;grid-template-columns:minmax(235px,1fr) minmax(40
 
 /* Estações sem medição: texto, nunca círculo branco/cinza. */
 .missing-reading-label{background:transparent!important;border:0!important;box-shadow:none!important;text-align:center}.missing-reading-label span{display:inline-block;padding:3px 5px;background:#10243b;color:#fff;border:1px solid #7194b6;border-radius:4px;font-size:10px;white-space:nowrap}
+
+.signal-arrow.rising{color:#eab308;font-size:38px;font-weight:1000;-webkit-text-stroke:2.5px currentColor}

@@ -66,8 +66,9 @@
     "lat": -30.25,
     "lon": -54.91,
     "code": "ref-santamaria-rosriodosul",
-    "source": "Agora RS (monitoramento público; verificar estação e dados)",
-    "url": null
+    "source": "Agora RS — ANA / Rede Hidrometeorológica Nacional",
+    "url": null,
+    "agorars_url": "https://agorars.com/monitor-dos-rios/?rio=rio-santa-maria"
   },
   {
     "name": "Jacuí — Cachoeira do Sul",
@@ -113,16 +114,13 @@
     "url": "https://nivelguaiba.com.br/riopardo"
   },
   {
-    "name": "Arroio Cadena — Santa Maria",
-    "river": "Arroio Cadena",
-    "city": "Santa Maria",
-    "lat": -29.69,
-    "lon": -53.81,
-    "code": "ref-vacaca-santamaria",
-    "source": "Defesa Civil RS — DCRS-00027",
-    "url": null,
-    "official_code": "DCRS-00027",
-    "official_label": "DCRS027 Santa Maria - Arroio Cadena",
-    "official_url": "https://redehidrometeorologica.defesacivil.rs.gov.br/Estacao/DCRS-00027"
+    "name": "Jacuí — Dona Francisca",
+    "river": "Jacuí",
+    "city": "Dona Francisca",
+    "lat": -29.62,
+    "lon": -53.36,
+    "code": "ref-jacui-donafrancisca",
+    "source": "Nível Guaíba — Dona Francisca",
+    "url": "https://nivelguaiba.com.br/donafrancisca"
   }
 ]

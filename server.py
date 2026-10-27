@@ -102,32 +102,33 @@ def parse_aggregator_page(text):
  return level,stamp,number(cot.group(1)) if cot else None
 
 def parse_agorars(text, river, city):
- # Procura o cabeçalho exato da estação, evitando capturar medições de outra cidade.
+ # Cada medição pertence ao bloco entre o título da estação e o título seguinte.
+ # Evita capturar o índice, gráficos e números de estações vizinhas.
  aliases={'Manuel Viana':'Manoel Viana'}
  cityname=aliases.get(city,city)
- pattern=r'Rio\s+'+re.escape(river)+r'\s*[-–—]\s*'+re.escape(cityname)+r'(?=\s|$)'
- headings=list(re.finditer(pattern,text,re.I))
- if not headings:raise ValueError('Estação não localizada no Agora RS: '+river+' / '+cityname)
- # O título pode ocorrer no índice da página: escolher o bloco que possui medição.
- for m in headings:
-  block=text[m.end():m.end()+3000]
-  d=re.search(r'Medição de\s+(\d{2}/\d{2}/\d{4})\s+às\s+(\d{2})\s*h\s*(\d{2})',block,re.I)
-  if not d or d.start()>250:continue
-  # Nível é o número após "Situação: ...", não os valores do gráfico.
-  lev=re.search(r'Situação\s*:\s*[^\d]{0,100}?\s+(-?\d{1,2}[,.]\d{2})\s+metros\b',block[d.end():d.end()+250],re.I)
+ station_title=r'Rio\s+'+re.escape(river)+r'\s*[-–—]\s*'+re.escape(cityname)+r'(?=\s|$)'
+ starts=list(re.finditer(station_title,text,re.I))
+ if not starts:raise ValueError('Estação não localizada no Agora RS: '+river+' / '+cityname)
+ for m in starts:
+  # A página pode repetir nomes em menus: só aceitar bloco com medição próxima.
+  rest=text[m.end():]
+  dt=re.search(r'Medição de\s+(\d{2}/\d{2}/\d{4})\s+às\s+(\d{2})\s*h\s*(\d{2})',rest[:450],re.I)
+  if not dt:continue
+  # Corta na primeira fonte ou no próximo cabeçalho de estação.
+  end=re.search(r'Fonte dos dados\s*:',rest[dt.end():],re.I)
+  if not end:continue
+  block=rest[:dt.end()+end.start()]
+  # Primeiro nível explicitamente associado à situação; não confundir com gráfico.
+  lev=re.search(r'Situação\s*:\s*[^0-9]{0,100}?\s*(-?\d{1,2}[,.]\d{2})\s+metros\b',block[dt.end():dt.end()+300],re.I)
   if not lev:continue
-  # Cota deve pertencer ao mesmo quadro, terminando antes da próxima estação.
-  section=block[:min(len(block),3000)]
-  source_end=re.search(r'Fonte dos dados\s*:',section,re.I)
-  if source_end:section=section[:source_end.start()]
-  cot=re.search(r'Cota de inundação\s*:\s*(\d{1,2}[,.]\d{2})\s*metros',section,re.I)
-  stamp=datetime.strptime(d.group(1)+' '+d.group(2)+':'+d.group(3),'%d/%m/%Y %H:%M').replace(tzinfo=TZ)
+  cot=re.search(r'Cota de inundação\s*:\s*(\d{1,2}[,.]\d{2})\s*metros',block,re.I)
+  stamp=datetime.strptime(dt.group(1)+' '+dt.group(2)+':'+dt.group(3),'%d/%m/%Y %H:%M').replace(tzinfo=TZ)
   changes={}
   for h in (1,6,24):
-   a=re.search(r'(?<!\d)'+str(h)+r'\s*h\s*([↑↓])\s*(\d+)\s*cm',section)
-   changes[h]=round(float(a.group(2))/100*(1 if a.group(1)=='↑' else -1),3) if a else None
+   trend=re.search(r'(?<!\d)'+str(h)+r'\s*h\s*([↑↓])\s*(\d+)\s*cm',block)
+   changes[h]=round(int(trend.group(2))/100*(1 if trend.group(1)=='↑' else -1),3) if trend else None
   return number(lev.group(1)),stamp,number(cot.group(1)) if cot else None,changes
- raise ValueError('Medição não reconhecida no Agora RS para '+river+' / '+cityname)
+ raise ValueError('Medição ou cota não reconhecida para '+river+' / '+cityname)
 
 def fetch_station(name,conf,official_items=None,official_error=None):
  now=time.time()
@@ -169,8 +170,8 @@ def fetch_station(name,conf,official_items=None,official_error=None):
   except Exception as exc:failures.append('Agregador: '+str(exc))
  if parsed is None:
   try:
-   level,stamp,cota,changes=parse_agorars(fetch_text('https://agorars.com/monitor-dos-rios/'),conf['river'],conf['city'])
-   parsed=(level,stamp,cota);source='Agora RS (agregador de dados ANA/RHN)';link='https://agorars.com/monitor-dos-rios/'
+   level,stamp,cota,changes=parse_agorars(fetch_text(conf.get('agorars_url') or 'https://agorars.com/monitor-dos-rios/'),conf['river'],conf['city'])
+   parsed=(level,stamp,cota);source='Agora RS (agregador de dados ANA/RHN)';link=conf.get('agorars_url') or 'https://agorars.com/monitor-dos-rios/'
   except Exception as exc:failures.append('Agora RS: '+str(exc))
  if parsed:
   level,stamp,cota=parsed;age=(datetime.now(TZ)-stamp).total_seconds()/3600;stale=age>3 or age<-.5
