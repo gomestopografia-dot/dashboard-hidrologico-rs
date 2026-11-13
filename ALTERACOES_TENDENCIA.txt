@@ -1,0 +1,1 @@
+Tendência: calcula a variação entre a medição mais recente e a medição mais próxima de 1 hora antes (janela de 30 a 90 minutos). Mostra seta para cima/vermelha se subiu, seta para baixo/verde se desceu; estável se igual. Mesmo com dado antigo, apresenta tendência histórica quando disponível; o aviso de dado antigo permanece. Se não houver duas medições, não inventa tendência.

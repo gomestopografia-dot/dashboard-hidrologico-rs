@@ -1,0 +1,1 @@
+Texto técnico recolhido em ícone expansível junto ao diagnóstico. Bloco de planejamento abaixo do mapa, com período automático de hoje a hoje+6 dias, inclusive. 40-50 mm e avaliação operacional são textos fornecidos pelo usuário, não calculados ou validados pelo dashboard.\n

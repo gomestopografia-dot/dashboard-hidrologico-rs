@@ -1,0 +1,1 @@
+Tendência SACE: usa comparação de 1 hora quando disponível; se não houver, compara a leitura atual com uma medição de aproximadamente 24 horas antes (tolerância de 2 horas). O texto informa quando o período é aproximado. Não inventa tendência sem histórico suficiente. Exemplo: Desceu 1,03 m nas últimas 24 horas, somente quando os dados confirmarem.

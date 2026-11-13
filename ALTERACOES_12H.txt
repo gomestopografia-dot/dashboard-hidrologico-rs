@@ -1,0 +1,1 @@
+Regra: medição com menos de 12h -> Normalidade (verde) abaixo de 90% da cota; Alerta de Inundação (laranja) de 90% até menos de 100%; Inundação (vermelho) a partir de 100%. Sem medição ou medição com 12h ou mais -> laranja, Dado antigo/Sem leitura. Não há indicador cinza. A cor de dados antigos indica indisponibilidade, NÃO situação hidrológica. Fonte e horário preservados.

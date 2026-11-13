@@ -1,0 +1,5 @@
+Integração São Borja SACE: URL direta confirmada https://sace.sgb.gov.br/niveis/api/dados/uruguai_33_cota.csv. Consulta a cada 5 minutos; mantém data/hora da medição, aviso de dado antigo e fallback CSV local. Layout e demais estações preservados.
+
+ALERTA DE INUNDAÇÃO: se nível >= cota cadastrada, selo vermelho INUNDAÇÃO em todos os municípios; se dado antigo, mostrar INUNDAÇÃO · DADO ANTIGO, mantendo a data e sem alegar leitura atual.
+
+12/11/2026: Rio Pardo (ANA 85900000) consulta automaticamente https://sace.sgb.gov.br/niveis/api/dados/guaiba_55_cota.csv. Cota de inundação 12,50m. Dados antigos sinalizados. Diagnóstico saceRioPardoDiagnostico.

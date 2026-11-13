@@ -1,0 +1,5 @@
+São Borja / Passo São Borja (ANA 75780000)
+Página: https://sace.sgb.gov.br/index_bacias_monitoradas.php?getbacia=buruguai
+CSV automático: https://sace.sgb.gov.br/niveis/api/dados/uruguai_33_cota.csv
+Consulta em cache a cada 5 minutos. Conferir /api/diagnostico > saceDiagnostico > automatico.
+Cota de inundação: 9,00 m. Dados antigos não representam situação atual.

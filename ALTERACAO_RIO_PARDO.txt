@@ -1,0 +1,1 @@
+Rio Pardo: a classificação passa a depender do último nível disponível, independentemente da idade da leitura. A data/hora original permanece visível. Uma leitura antiga não deve ser interpretada como situação atual confirmada. A mesma regra aplica-se às demais estações com medição válida.

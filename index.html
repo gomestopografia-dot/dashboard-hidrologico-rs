@@ -1,1 +1,183 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hidro RS — V8</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script></head><body><header><div><h1>HIDROGRÁFICA <span>Monitoramento dos rios — V8.6</span></h1><p>Mapa central com quadros laterais • nível atual — cota de inundação • consulta a cada 5 minutos</p></div><div id="updated">Aguardando atualização</div></header><div class="notice">Painel informativo, não é alerta oficial. A faixa amarela (90% a menos de 100%) é uma regra preventiva do painel, não um limite oficial de atenção. Sem dados simulados. Fonte e horário indicados em cada estação. Cotas só são exibidas quando informadas pela fonte consultada. Sem leitura atual, não há indicador de risco.</div><section class="metrics"><article><small>Estações configuradas</small><strong id="total">—</strong></article><article><small>Com leitura recente</small><strong id="valid">—</strong></article><article><small>Atenção (90–100%)</small><strong id="near">—</strong></article><article><small>Na cota ou acima</small><strong id="flood">—</strong></article><article><small>Sem dados / antigas</small><strong id="stale">—</strong></article></section><main class="hydro-layout"><aside class="river-column" aria-label="Rios da coluna esquerda"><h2>BACIA DO URUGUAI</h2><div id="leftGroups" class="river-groups"></div></aside><section class="panel mapPanel"><div class="panelHead"><h2>Bacias hidrográficas — 3ª Divisão de Exército</h2><span>Rio Grande do Sul</span></div><div id="map"></div><div class="map-caption">Círculos verde, amarelo e vermelho indicam risco apenas com nível recente e cota válida. O ícone 📍 identifica Santa Maria e Rosário do Sul quando não há classificação; não é alerta. Os pontos são aproximados.</div></section><aside class="river-column" aria-label="Rios da coluna direita"><h2>BACIAS DO GUAÍBA E ADJACENTES</h2><div id="rightGroups" class="river-groups"></div></aside></main><section class="panel browse"><div class="panelHead"><h2>Consultar municípios e estações</h2></div><div class="filters"><input id="search" placeholder="Buscar rio, município ou estação"><select id="filter"><option value="all">Todos os estados</option><option value="inundacao">Na cota ou acima</option><option value="proximo">Próximo da cota</option><option value="normal">Normal (&lt;90%)</option><option value="sem_cota">Sem cota cadastrada</option><option value="desatualizado">Dados antigos</option><option value="indisponivel">Indisponíveis</option></select></div><div class="legend-inline"><span><b class="legend-dot green"></b> Normal (&lt;90%)</span><span><b class="legend-dot orange"></b> Atenção</span><span><b class="legend-dot red"></b> Inundação</span><span>🔴↑ Subindo</span><span>🟢↓ Baixando</span><span>🟢↓ Estável (identificado nos detalhes)</span><span>— Sem dados</span></div><details class="station-details"><summary>Lista detalhada das estações</summary><div id="stations"></div></details></section><section class="panel detail"><div class="panelHead"><h2 id="detailTitle">Selecione uma estação</h2><span id="detailStatus"></span></div><div id="detailInfo">Clique em um marcador ou estação para consultar o nível e as variações.</div><div class="chartBox"><canvas id="chart"></canvas></div></section><footer><span id="message">Iniciando consulta...</span><a href="https://www.defesacivil.rs.gov.br/" target="_blank" rel="noopener">Defesa Civil RS</a> • Emergência: 199</footer><script src="app.js"></script></body></html>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard Hidrológico | 3ª DE</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><style>
+*{box-sizing:border-box}body{margin:0;background:#091b2b;color:#eaf4fa;font:14px Arial,sans-serif}header{background:#11334b;border-bottom:2px solid #3182a7;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}h1{font-size:21px;margin:0 0 5px}small,.muted{color:#b1c8d5}button{background:#1785aa;color:white;border:0;border-radius:7px;padding:10px 16px;font-weight:bold;cursor:pointer}main{display:grid;grid-template-columns:minmax(230px,1fr) minmax(500px,2.7fr) minmax(230px,1fr);gap:12px;padding:12px}.panel{background:#102b40;border:1px solid #31546a;border-radius:9px;padding:12px}.map-panel h2{font-size:36px;line-height:1.18;font-weight:800;letter-spacing:.2px;text-align:center;width:100%;margin:0 0 14px}.map-panel>.row{justify-content:center;width:100%}.panel h2{font-size:15px;color:#9ad9f0;margin:0 0 12px}.river strong.city{font-size:23px;line-height:1.05;display:block;font-weight:800}.levels{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;line-height:1.05}.levels .current{font-size:25px;font-weight:800;white-space:nowrap}.levels .threshold{font-size:25px;font-weight:800;color:inherit;white-space:nowrap}.levels .sep{color:#9bb6c6;font-size:25px;font-weight:800}.river{background:#19394e;border:1px solid #31546a;border-radius:8px;padding:3px 11px;margin-bottom:6px}.row{display:flex;justify-content:space-between;align-items:center;gap:6px}.level{font-size:23px;font-weight:bold;margin:8px 0}.pill{border-radius:15px;padding:4px 8px;font-size:11px;background:#536a79;white-space:nowrap}.green{background:#328b52}.orange{background:#c8791b}.red{background:#c03742}.gray{background:#c8791b}.trend{font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:5px}.trend-arrow{font-size:29px;font-weight:1000;line-height:.9;display:inline-block;-webkit-text-stroke:1.2px currentColor}.down{color:#68dc91}.up{color:#ffbf4d}.stable{color:#a5b9c8}#map{height:765px;border-radius:8px}#status{padding:10px 16px;color:#b9d8e8}.note{line-height:1.5;font-size:12px;color:#bdd0db}.leaflet-popup-content{color:#172b39}footer{padding:12px 20px;color:#9ab4c2}@media(max-width:1050px){main{grid-template-columns:1fr}#map{height:558px}.map-panel{order:-1}}
+/* Regra específica após .panel h2, evitando a sobrescrita que impedia o aumento. */
+.panel.map-panel #titulo-mapa{font-size:34px!important;line-height:1.15;font-weight:900;text-align:center;display:block;width:100%;margin:0 auto 16px;color:#9ad9f0;letter-spacing:.15px}
+.panel.map-panel>.row{display:flex;justify-content:center;align-items:center;width:100%}
+@media(max-width:600px){.panel.map-panel #titulo-mapa{font-size:clamp(22px,5.8vw,34px)}}
+.forecast-note{margin-top:0px;padding:5px 16px 10px;border-radius:9px;background:#17354b;color:#f2f7fb;text-align:center;font-size:24px;line-height:1.5}.forecast-note p{margin:2px 0 8px;font-size:24px;font-weight:600}.forecast-note small{display:block;font-size:11px;color:#b7cad5}.info-details{display:inline-block;vertical-align:top;margin:0 12px 10px;padding:9px 12px;background:#17354b;border-radius:8px;max-width:calc(100% - 24px)}.info-details summary{cursor:pointer;color:#9cdef7;font-weight:600}.info-details p{font-size:12px;line-height:1.5;max-width:1100px}.legenda-hidrologica{margin:11px 0 2px;padding:10px 15px;background:#102d42;border:1px solid #345369;border-radius:9px;color:#eef7fc;font-size:14px;line-height:1.5}.legenda-titulo{text-align:center;font-weight:800;font-size:15px;margin-bottom:5px}.legenda-item{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;column-gap:9px;min-height:29px;white-space:normal}.legenda-bolinha{display:block;width:13px;height:13px;border-radius:50%;justify-self:center;align-self:center}.legenda-seta{display:flex;align-items:center;justify-content:center;width:34px;height:29px;font-size:34px;line-height:1;font-weight:900;-webkit-text-stroke:1.6px currentColor;text-shadow:0 0 1px currentColor}</style></head><body><div id="status" role="status" aria-live="polite" hidden></div><main><section class="panel"><h2>BACIA DO URUGUAI</h2><div id="left"></div></section><section class="panel map-panel"><div class="row"><h2 id="titulo-mapa">MONITORAMENTO HIDROLÓGICO - 3ª DIVISÃO DE EXÉRCITO</h2><span class="muted" id="total" hidden></span></div><div id="map"></div><div class="forecast-note" id="previsao-semanal" aria-label="Texto de planejamento">
+<p>A média da previsão de chuvas para a semana de <strong id="periodo-chuva">—</strong> é de <strong id="chuva-prevista">consultando...</strong>.</p>
+<p><span id="indicativo-om" style="color:#ff4545;font-weight:700">Aguardando previsão de chuva para calcular o indicativo.</span></p>
+<small>Modelo ECMWF IFS via Open-Meteo; média dos acumulados de 7 dias em São Borja, Uruguaiana, Santa Maria, Cachoeira do Sul, Rio Pardo e Lajeado. Indicativo baseado apenas no limiar de 50 mm, não constitui avaliação operacional. <span id="previsao-atualizacao"></span></small>
+</div></section><section class="panel"><h2>BACIA DO GUAÍBA E OUTRAS</h2><div id="right"></div>
+<aside class="legenda-hidrologica" aria-label="Legenda do monitoramento hidrológico">
+ <div class="legenda-titulo">LEGENDA</div>
+ <div class="legenda-item"><span class="legenda-bolinha" style="background:#00d779"></span>Normal</div>
+ <div class="legenda-item"><span class="legenda-bolinha" style="background:#ff8737"></span>Atenção</div>
+ <div class="legenda-item"><span class="legenda-bolinha" style="background:#ff4141"></span>Inundação</div>
+ <div class="legenda-item"><span class="legenda-seta" style="color:#00d779">⬇</span>Nível do rio baixando</div>
+ <div class="legenda-item"><span class="legenda-seta" style="color:#ff4141">⬆</span>Nível do rio subindo</div>
+</aside></section></main><details style="margin:0 12px 8px;padding:10px;background:#17354b;border-radius:8px"><summary style="cursor:pointer">Diagnóstico das consultas (clique para ver erros)</summary><pre id="errors" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px"></pre><a href="/api/diagnostico" target="_blank" style="color:#9cdef7">Abrir JSON de diagnóstico para enviar na conversa</a></details><details class="info-details"><summary title="Informações das fontes e funcionamento">ⓘ Informações das fontes</summary><p>Rio Pardo consulta automaticamente o CSV SACE/SGB da estação 85900000 (guaiba_55) a cada cinco minutos; leituras antigas são identificadas. São Sepé utiliza a estação Camping São Sepé (85623010), conforme correspondência de código retornado pelo ClimaRS. São Borja utiliza Passo São Borja (75780000). São Borja consulta automaticamente o CSV oficial da estação Passo São Borja no SACE/SGB a cada cinco minutos. Se o SACE estiver inacessível, o CSV local é usado somente como histórico e a leitura antiga é sinalizada. Consulte o diagnóstico para verificar se a atualização automática foi confirmada. Se a fonte não devolver leitura recente dessa estação, o painel mostra ausência de medição, sem usar Garruchos como substituta. As demais estações são identificadas pelo nome e município oficial. Se uma estação específica não for localizada, aparecerá “Sem leitura confirmada”, sem utilizar medições de outras cidades. O status é publicado pelo ClimaRS. Leituras recentes obtidas na ANA legado aparecem sem classificação de inundação; dados com mais de 24 horas não são exibidos como atuais. Mapa requer internet.</p></details><footer>Atualização automática a cada 5 minutos • <a href="https://clima.rs.gov.br/" target="_blank" style="color:#9cdef7">ClimaRS</a> • Não substitui os alertas da Defesa Civil</footer><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+const grupos=[
+{lado:"left",rio:"Rio Uruguai",municipios:["São Borja","Itaqui","Uruguaiana"]},
+{lado:"left",rio:"Rio Ibicuí",municipios:["Manoel Viana"]},
+{lado:"left",rio:"Rio Ibirapuitã",municipios:["Alegrete"]},
+{lado:"left",rio:"Rio Quaraí",municipios:["Quaraí"]},
+{lado:"left",rio:"Rio Santa Maria",municipios:["Rosário do Sul"]},
+{lado:"right",rio:"Rio Jacuí",municipios:["Cachoeira do Sul"]},
+{lado:"right",rio:"Rio Taquari",municipios:["Lajeado"]},
+{lado:"right",rio:"Rio Jacuí",municipios:["Rio Pardo"]},
+{lado:"right",rio:"Rio Jacuí",municipios:["Dona Francisca"]},
+{lado:"right",rio:"Rio Forqueta",municipios:["Barra do Fão"]},
+{lado:"right",rio:"Rio São Sepé",municipios:["São Sepé"]}
+];
+// Códigos de estação informados pelo usuário; associação por código tem prioridade.
+const codigosEstacoes={
+ "São Borja":"75780000",
+ "Rosário do Sul":"76310000",
+ "Rio Pardo":"85900000",
+
+ "Barra do Fão":"86780000",
+ "São Sepé":"85623010"
+};
+const aliases={"Cachoeira do Sul":["passo sao lourenco","passo são lourenço"],"São Sepé":["camping sao sape","camping sao sepe"],"São Borja":["passo sao borja"],"Barra do Fão":["barra do fao"],"Lajeado":["estrela"],"Manoel Viana":["manoel viana","manuel viana"]};
+function norm(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()}
+function match(e,municipio,rio){
+ const nomes=(aliases[municipio]||[norm(municipio)]).map(norm);
+ const est=norm(e.nomeEstacao),mun=norm(e.municipio),r=norm(e.rio);
+ const lugar=nomes.some(x=>est.includes(x)||mun===x);
+ const rioOk=r.includes(norm(rio).replace("rio ","")) || (!r && est.includes(norm(rio).replace("rio ","")));
+ return lugar && rioOk;
+}
+function escolher(estacoes,municipio,rio){
+ if(municipio==="Cachoeira do Sul"){
+   // Estação Passo São Lourenço: não exige rio preenchido ou grafia exata.
+   // Evita confundir Cachoeira do Sul com Rio Pardo.
+   return estacoes.find(e=>{
+     const nome=norm(e.nomeEstacao).replace(/[^a-z0-9]/g,"");
+     return nome.includes("passosaolourenco") && e.nivelMetros!=null;
+   }) || null;
+ }
+ const codigo=codigosEstacoes[municipio];
+ if(codigo){
+   const porCodigo=estacoes.find(e=>String(e.codigoEstacao||"").trim()===codigo && e.nivelMetros!=null);
+   if(porCodigo)return porCodigo;
+   // Evita mostrar a estação errada quando há um código oficial definido.
+   return null;
+ }
+ let cand=estacoes.filter(e=>match(e,municipio,rio) && e.nivelMetros!=null);
+ // Preferir estação com município exato, depois nome específico e medição mais recente.
+ cand.sort((a,b)=>Number(norm(b.municipio)===norm(municipio))-Number(norm(a.municipio)===norm(municipio)) || Number(b.principal===true)-Number(a.principal===true));
+ return cand[0]||null;
+}
+let mapa,camada;
+if(window.L){mapa=L.map("map").setView([-29.7,-53.9],7);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap"}).addTo(mapa);camada=L.layerGroup().addTo(mapa)}
+else document.getElementById("map").innerHTML='<p style="padding:30px">Mapa indisponível: verifique a conexão com a internet.</p>';
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+// Classificação baseada EXCLUSIVAMENTE na cota cadastrada e na idade da medição.
+// Até 12 horas: verde <90%, laranja >=90% e <100%, vermelho >=100%.
+// Dados antigos ou ausentes: laranja de atenção à qualidade dos dados, nunca cinza.
+function horasDaMedicao(e){
+ if(!e)return Infinity;
+ if(e.horasDesdeMedicao!=null && Number.isFinite(Number(e.horasDesdeMedicao)))return Math.max(0,Number(e.horasDesdeMedicao));
+ const bruto=String(e.dataHoraMedicao||'').trim();let d=null;
+ const br=bruto.match(/^(\d{2})\/(\d{2})\/(\d{4})[ ,T]+(\d{2}):(\d{2})(?::(\d{2}))?/);
+ if(br)d=new Date(Number(br[3]),Number(br[2])-1,Number(br[1]),Number(br[4]),Number(br[5]),Number(br[6]||0));
+ else if(bruto)d=new Date(bruto);
+ if(!d||!Number.isFinite(d.getTime()))return Infinity;
+ return Math.max(0,(Date.now()-d.getTime())/3600000);
+}
+function classificacao(e,mun){
+ const limite=cotasInundacao[mun];const nivel=Number(e?.nivelMetros);
+ if(!e||e.nivelMetros==null||!Number.isFinite(nivel)||!Number.isFinite(limite)||limite<=0)return {cor:'orange',rotulo:'Sem leitura',recente:false};
+ const recente=horasDaMedicao(e)<12;
+ // Classificar pelo último nível medido mesmo quando a leitura é antiga.
+ // A data da medição permanece visível para não sugerir atualização em tempo real.
+ if(nivel>=limite)return {cor:'red',rotulo:'Inundação',recente:recente};
+ if(nivel>=limite*0.9)return {cor:'orange',rotulo:'Alerta de Inundação',recente:recente};
+ return {cor:'green',rotulo:'Normalidade',recente:recente};
+}
+function cor(e,mun){return classificacao(e,mun).cor}
+function trend(e){
+ if(!e)return "Sem dados para calcular a tendência";
+ const descricao=String(e.taxaMudanca||"");
+ const n=e.taxaMudancaValor==null?NaN:Number(e.taxaMudancaValor);
+ if(!Number.isFinite(n))return esc(descricao||"Sem medições suficientes para calcular a tendência horária");
+ const classe=n<0?"down":n>0?"up":"stable";
+ const seta=n<0?"↓":n>0?"↑":"→";
+ return `<span class="trend ${classe}"><span class="trend-arrow">${seta}</span><span>${esc(descricao||"Estável na última hora")}</span></span>`;
+}
+// Cotas verificadas nos dados fornecidos. As demais permanecem indisponíveis até validação.
+const cotasInundacao={"Cachoeira do Sul":9.00,"Lajeado":19.00,"Dona Francisca":7.50,"Barra do Fão":10.00,"São Sepé":7.00,"São Borja":9.00,"Itaqui":8.30,"Uruguaiana":8.50,"Manoel Viana":9.60,"Alegrete":9.70,"Quaraí":9.50,"Rosário do Sul":6.70,"Rio Pardo":12.50};
+function metros(v){return Number(v).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+" m"}
+function card(mun,rio,e){
+ const estado=classificacao(e,mun);
+ const atual=e&&e.nivelMetros!=null?metros(e.nivelMetros):'—';
+ const inundacao=Object.hasOwn(cotasInundacao,mun)?metros(cotasInundacao[mun]):'—';
+ const info=trend(e);
+ return `<article class="river"><div class="row"><strong class="city">${esc(mun)}</strong><span class="pill ${estado.cor}" title="${estado.recente?'Medição recente':'Última medição disponível; dado com 12 horas ou mais'}">${esc(estado.rotulo)}</span></div><div class="levels" style="margin:3px 0"><span class="current">${atual}</span><span class="sep">–</span><span class="threshold">${inundacao}</span></div><div class="row"><span>${info}</span><span class="muted">${esc(e?.dataHoraShort||'Sem horário')}</span></div></article>`;
+}
+async function consultarSaoBorjaIndependente(){
+ try {
+  const r=await fetch('/api/sao-borja?ts='+Date.now(),{cache:'no-store'});
+  if(!r.ok)throw Error('HTTP '+r.status);
+  const d=await r.json();
+  window.saceSaoBorja=d;
+  const pre=document.getElementById('errors');
+  if(pre)pre.textContent='SACE São Borja (consulta independente):\n'+JSON.stringify(d.diagnostico,null,2)+'\n\n'+pre.textContent;
+  const est=d.estacao;
+  const gruposSao=grupos.find(g=>g.lado==='left'&&g.municipios.includes('São Borja'));
+  if(gruposSao){const caixa=document.querySelector('#left article.river');if(caixa)caixa.outerHTML=card('São Borja','Rio Uruguai',est)}
+ } catch(err) {
+  const pre=document.getElementById('errors');if(pre)pre.textContent='SACE São Borja: '+err.message+'\n'+pre.textContent;
+ }
+}
+async function atualizar(){
+ const s=document.getElementById("status");s.textContent="Consultando ClimaRS... Na primeira consulta, aguarde até alguns minutos.";
+ try{
+ const r=await fetch("/api/stations?ts="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);
+ const d=await r.json();const estacoes=d.estacoes||[];let selecionadas=0;
+ const codigosRetornados=new Set(estacoes.map(e=>String(e.codigoEstacao||"").trim()));
+ const faltantes=Object.entries(codigosEstacoes).filter(([m,c])=>!codigosRetornados.has(c)).map(([m,c])=>m+" ("+c+")");
+
+ if(camada)camada.clearLayers();
+ for(const lado of ["left","right"]){let html="";for(const g of grupos.filter(x=>x.lado===lado)){
+ html+=`<h3 style="font-size:14px;color:#a7d6e8;margin:16px 0 8px">${esc(g.rio)}</h3>`;
+ for(const mun of g.municipios){const e=escolher(estacoes,mun,g.rio);html+=card(mun,g.rio,e);if(e){selecionadas++;
+ if(camada && Number.isFinite(Number(e.latitude))&&Number.isFinite(Number(e.longitude))){const c=cor(e,mun);const cores={green:"#42ba72",orange:"#f3a13d",red:"#e94b55",gray:"#f3a13d"};L.circleMarker([Number(e.latitude),Number(e.longitude)],{radius:9,color:"#fff",weight:2,fillColor:cores[c],fillOpacity:.95}).addTo(camada).bindPopup(`<b>${esc(g.rio)} — ${esc(mun)}${mun==="São Borja"?" (estação Passo São Borja)":""}</b><br>${esc(e.nomeEstacao)}<br>${Number(e.nivelMetros).toLocaleString("pt-BR")} m<br>${esc(e.dataHoraMedicao)}`)}
+ }}}
+ document.getElementById(lado).innerHTML=html}
+ document.getElementById("total").textContent=selecionadas+" leituras vinculadas";
+ if(window.saceSaoBorja){const caixa=document.querySelector("#left article.river");if(caixa)caixa.outerHTML=card("São Borja","Rio Uruguai",window.saceSaoBorja.estacao)}
+ s.textContent="Consulta: "+(d.consultadoEm?new Date(d.consultadoEm).toLocaleString("pt-BR"):"—")+" | "+estacoes.length+" estações retornadas | "+selecionadas+" vinculadas aos quadros"+(d.erros?.length?" | "+d.erros.length+" consultas com erro":"");
+ document.getElementById("errors").textContent=
+ "SACE Rio Pardo:\n"+JSON.stringify(d.saceRioPardoDiagnostico||{},null,2)+"\n\nSACE São Borja:\n"+JSON.stringify(d.saceDiagnostico||{},null,2)+"\n\nCSV São Borja:\n"+JSON.stringify(d.csvSaoBorjaDiagnostico||{},null,2)+"\n\nEstações por código ainda não retornadas:\\n"+(faltantes.join("\\n")||"Nenhuma")+"\\n\\nErros das consultas:\\n"+((d.erros||[]).join("\\n")||"Nenhum");
+ const candidatos=estacoes.filter(e=>norm(e.nomeEstacao).includes("louren")||norm(e.nomeEstacao).includes("cachoeira"));
+ document.getElementById("errors").textContent += "\n\nEstações candidatas para Cachoeira do Sul: "+JSON.stringify(candidatos.map(e=>({codigo:e.codigoEstacao,nome:e.nomeEstacao,municipio:e.municipio,rio:e.rio,nivelMetros:e.nivelMetros})),null,2);
+ if(d.erros?.length)console.warn("Falhas de consulta",d.erros);
+ }catch(e){s.textContent="Falha ao carregar: "+e.message+". Verifique se INICIAR está aberto e a conexão à internet."}
+}
+consultarSaoBorjaIndependente();setInterval(consultarSaoBorjaIndependente,300000);
+atualizar();setInterval(atualizar,300000);
+</script><script>(function(){function atualizarPeriodo(){const d=new Date();const fim=new Date(d.getFullYear(),d.getMonth(),d.getDate()+6);const fmt=(v)=>String(v).padStart(2,"0");const meses=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];let periodo;if(d.getMonth()===fim.getMonth()&&d.getFullYear()===fim.getFullYear()){periodo=fmt(d.getDate())+" a "+fmt(fim.getDate())+" de "+meses[d.getMonth()]}else{periodo=fmt(d.getDate())+" de "+meses[d.getMonth()]+" a "+fmt(fim.getDate())+" de "+meses[fim.getMonth()]}document.getElementById("periodo-chuva").textContent=periodo;}atualizarPeriodo();})();</script><script>
+async function atualizarPrevisao(){
+ const chuva=document.getElementById("chuva-prevista");
+ const indicativo=document.getElementById("indicativo-om");
+ const atualizacao=document.getElementById("previsao-atualizacao");
+ try{
+  const r=await fetch("/api/previsao?ts="+Date.now(),{cache:"no-store"});
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const d=await r.json();
+  if(!d.disponivel)throw new Error(d.erro||"Previsão indisponível");
+  const mm=Number(d.mediaMm);
+  if(!Number.isFinite(mm))throw new Error("Acumulado inválido");
+  chuva.textContent=mm.toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1})+" mm";
+  indicativo.textContent=(mm>50?"É provável":"É pouco provável")+" a solicitação para o emprego de OM da 3ª DE em sua Área de Segurança Integrada (ASI).";
+  atualizacao.textContent=d.atualizadoEm?" Consulta: "+new Date(d.atualizadoEm).toLocaleString("pt-BR"):"";
+ }catch(e){
+  chuva.textContent="indisponível";
+  indicativo.textContent="Sem indicativo automático: previsão não disponível.";
+  atualizacao.textContent=" ("+e.message+")";
+ }
+}
+atualizarPrevisao();setInterval(atualizarPrevisao,3600000);
+</script></body></html>

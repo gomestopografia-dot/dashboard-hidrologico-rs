@@ -1,0 +1,25 @@
+VERSÃO CACHOEIRA 2 — DIAGNÓSTICO
+
+Feche TODAS as janelas pretas antigas. Extraia esta pasta em local novo. Execute INICIAR.bat.
+Verifique se o título mostra VERSÃO CACHOEIRA 2. Se não mostrar, há servidor antigo na porta 8000.
+No navegador use Ctrl+F5. Cachoeira do Sul substitui Rio Pardo no quadro Rio Jacuí.
+Se não aparecer medição, abra http://localhost:8000/api/diagnostico e envie o resultado.
+O painel não inventa leituras e não usa estação errada.
+
+ALTERAÇÃO: São Borja usa exclusivamente Passo São Borja, código 75780000. Não usa Garruchos. Leitura antiga não é exibida como atual.
+
+ORDEM DO PAINEL DIREITO: Cachoeira do Sul, Lajeado, Dona Francisca, Barra do Fão, São Sepé.
+
+ATUALIZAÇÃO: Rio Pardo (Rio Jacuí), código ANA 85900000, inserido logo abaixo de Lajeado. Não confundir com Cachoeira do Sul/Passo São Lourenço.
+
+LAYOUT: cidade em fonte maior, sem observações de estação dentro do quadro; nível medido — cota de inundação. Somente Rio Pardo tem cota de inundação validada (12,50 m) pela captura SACE fornecida; as demais mostram traço, sem inventar limites. A leitura Rio Pardo pode estar indisponível/desatualizada.
+
+COTAS DE INUNDAÇÃO INFORMADAS PELO USUÁRIO (m): Cachoeira do Sul 9,00; Lajeado 19,00; Dona Francisca 7,50; Barra do Fão 10,00; São Sepé 7,00; São Borja 9,00; Itaqui 8,30; Uruguaiana 8,50; Manoel Viana 9,60; Alegrete 9,70; Quaraí 9,50; Rosário do Sul 6,70. Rio Pardo 12,50 conforme captura SACE anterior. Não são leituras atuais; são limiares fixos.
+
+LAYOUT FONTES: nome da cidade ampliado; nível e cota de inundação com mesma fonte; legenda removida; seta de tendência ampliada e reforçada; horário preservado.
+
+LAYOUT: removido cabeçalho superior, botão de atualização e linha de versão/consulta. Título principal agora no painel central, acima do mapa. Atualização automática de 5 em 5 minutos permanece ativa. Diagnóstico movido para baixo dos quadros.
+
+SÃO BORJA / SACE: Foi adicionada consulta à lista de estações do SACE. No diagnóstico do dashboard aparece o resultado do acesso. Como não foi possível validar a estrutura da tabela do SACE neste ambiente, a leitura SACE não é exibida automaticamente até que se confirme o formato; permanece o fallback por código ANA, respeitando limite de 24h.
+
+SÃO BORJA / CSV SACE: uruguai_33_cota.csv foi incluído na pasta. O painel lê a última linha cronológica válida. ESTE ARQUIVO É ESTÁTICO, não atualiza automaticamente. Para obter novas leituras, baixe Dados cota (CSV) na estação Passo São Borja, substitua uruguai_33_cota.csv pelo novo CSV (mesmo nome) e reinicie o servidor. Se a leitura tiver mais de 3 horas, aparecerá Dado antigo (CSV), com horário real e sem tendência atual.

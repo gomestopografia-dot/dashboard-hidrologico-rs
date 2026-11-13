@@ -1,0 +1,16 @@
+CORRECAO DA CONEXAO SSL COM SACE/SGB - SAO BORJA
+
+O erro CERTIFICATE_VERIFY_FAILED ocorre antes de baixar o CSV.
+
+1. Feche o servidor Python anterior.
+2. Execute INSTALAR_CERTIFICADOS.bat uma vez (precisa de Internet e pip).
+3. Execute INICIAR.bat.
+4. Abra http://localhost:8000/api/sao-borja e confira automatico: true.
+
+A consulta continua exclusiva ao SACE/SGB, CSV uruguai_33_cota.csv.
+A validacao HTTPS permanece ATIVA: nao ha verify=False nem context unverified.
+Se persistir o erro, pode haver um certificado intermediario corporativo
+na rede nao confiavel pelo Windows; procure suporte de TI para instalar
+somente o certificado raiz legitimo da organizacao. Nao desative SSL.
+
+IMPORTANTE: o teste da conexao HTTPS precisa ocorrer no seu Windows.

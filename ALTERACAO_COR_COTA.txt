@@ -1,0 +1,1 @@
+A cota de inundação agora usa a mesma cor do nível atual (herdada do quadro). Nenhuma outra alteração visual ou funcional.
